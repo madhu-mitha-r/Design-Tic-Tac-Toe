@@ -1,18 +1,28 @@
-## Getting Started
+# Design Tic-Tac-Toe
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Low-level design of a Tic-Tac-Toe game in Java. Supports human and bot players, configurable board size, pluggable winning strategies (row, column, diagonal), bot difficulty levels, and undo.
 
-## Folder Structure
+## Run
 
-The workspace contains two folders by default, where:
+`bin/` is gitignored — the first command below creates it and compiles into it.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+```bash
+javac -d bin $(find src -name "*.java")
+java -cp bin App
+```
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## Structure
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+- `src/App.java` — entry point
+- `src/Controllers/` — `TicTacToeController` orchestrates game lifecycle
+- `src/models/` — `Board`, `Cell`, `Player` (`Human`, `Bot`), `Move`, `Symbol`, `GameState`, `TicTacToeGame`
+- `src/stratergies/` — `WiningStrategy` (Row/Column/Diagonal) and `BotDifficultStrategy` (Easy/Medium/Hard)
+- `src/factories/` — `BotDifficultlyStrategyFactory` builds bot strategy from difficulty level
+- `src/Exceptions/` — `InvalidCellException`, `CellAlreadyFilledException`
 
-## Dependency Management
+## Features
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- N x N board, 2+ players
+- Human and Bot players with Easy / Medium / Hard difficulty
+- Winning detection via composable strategies
+- Undo last move
