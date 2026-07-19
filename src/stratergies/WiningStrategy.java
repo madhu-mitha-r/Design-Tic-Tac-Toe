@@ -1,5 +1,7 @@
 package stratergies;
 
+import models.Board;
+
 public interface WiningStrategy {
-    void checkWinner();
+    boolean checkWinner(Board board);
 }

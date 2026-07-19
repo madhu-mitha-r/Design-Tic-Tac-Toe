@@ -1,6 +1,10 @@
 package stratergies;
+import models.Board;
 
 public class DiagonalStrategy implements WiningStrategy {
+
     @Override
-    public void checkWinner() {}
+    public boolean checkWinner(Board board) {
+        return false;
+    }
 }

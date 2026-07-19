@@ -27,6 +27,10 @@ public class Board {
         return this.boardSize;
     }
 
+    public Cell getCell(int i, int j) {
+        return grid.get(i).get(j);
+    }
+
     public void display(){
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {

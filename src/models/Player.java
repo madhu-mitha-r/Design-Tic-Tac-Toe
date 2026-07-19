@@ -11,7 +11,13 @@ public abstract class Player {
         this.symbol = symbol;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Symbol getSymbol() {
         return symbol;
     }
+
+    public abstract Move makeMove(Board board);
 }

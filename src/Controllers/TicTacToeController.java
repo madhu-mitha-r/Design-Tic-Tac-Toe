@@ -1,9 +1,6 @@
 package Controllers;
 
-import models.Human;
-import models.Player;
-import models.Symbol;
-import models.TicTacToeGame;
+import models.*;
 import stratergies.WiningStrategy;
 
 import java.util.ArrayList;
@@ -22,6 +19,17 @@ public class TicTacToeController {
         List<WiningStrategy> winingStrategies = new ArrayList<>();
 
         this.game = new TicTacToeGame(boardSize, players, winingStrategies);
+
+        while(game.getGameState() == GameState.IN_PROGRESS){
+            game.displayGame();
+            game.makeMove();
+        }
+        game.displayGame();
+        if(game.getGameState().equals(GameState.SUCCESS)){
+            System.out.println("GAME OVER !!"+ game.getWinner().getName()+"is the Winner!!");
+        }else if(game.getGameState().equals(GameState.DRAW)){
+            System.out.println("GAME OVER !!, Its a DRAW");
+        }
     }
 
     private int getBoardSize(){
@@ -42,10 +50,5 @@ public class TicTacToeController {
 
         return players;
     }
-
-    public void displayGame(){
-        this.game.displayGame();
-    }
-
 
 }

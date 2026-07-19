@@ -20,6 +20,10 @@ public class Cell {
         this.player = player;
     }
 
+    public void setCellType(CellType celltype) {
+        this.celltype = celltype;
+    }
+
 
     //getters
     public Player getPlayer() {
@@ -28,6 +32,14 @@ public class Cell {
 
     public CellType getCelltype() {
         return celltype;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public void display(){

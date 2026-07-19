@@ -1,5 +1,7 @@
 package models;
 
+import Exceptions.CellAlreadyFilledException;
+import Exceptions.InvalidCellException;
 import stratergies.WiningStrategy;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ public class TicTacToeGame {
         this.board = new Board(boardSize);
         this.players = players;
         this.winner = null;
-        this.currentPlayer = null;
+        this.currentPlayer = players.get(0);
         this.winingStrategies = winingStrategies;
         this.gameState = GameState.IN_PROGRESS;
         this.moves = new ArrayList<>();
@@ -31,6 +33,78 @@ public class TicTacToeGame {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+
+    private void validateMove(Move move){
+        int row = move.getCell().getRow();
+        int col = move.getCell().getCol();
+
+        if(row < 0 || row >= this.board.getBoardSize() || col < 0 || col >= this.board.getBoardSize()){
+            throw new InvalidCellException(row,col);
+        }
+
+        if(this.board.getCell(row,col).getCelltype().equals(CellType.FILLED)){
+            throw new CellAlreadyFilledException(row,col);
+        }
+    }
+
+    private boolean checkWinner(){
+
+        for(WiningStrategy winingStrategy : this.winingStrategies){
+            if(winingStrategy.checkWinner(board)) return true;
+        }
+
+        return false;
+    }
+
+    private boolean checkDraw(){
+        return moves.size() == board.getBoardSize() * board.getBoardSize();
+    }
+
+    private Move updateGameWithMove(Move move){
+        int row = move.getCell().getRow();
+        int col = move.getCell().getCol();
+
+        Cell cellInBoard = board.getCell(row,col);
+        cellInBoard.setPlayer(move.getPlayer());
+        cellInBoard.setCellType(CellType.FILLED);
+
+        int index  = players.indexOf(this.currentPlayer);
+        index++;
+        index %= players.size();
+        this.currentPlayer = players.get(index);
+
+        move.setCell(cellInBoard);
+        moves.add(move);
+
+        return move;
+    }
+
+    public void makeMove(){
+
+        Move move = currentPlayer.makeMove(this.board);
+
+        try {
+            validateMove(move);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Please try again");
+            return;
+        }
+
+        Move updatedMove = updateGameWithMove(move);
+
+        if(checkWinner()){
+            this.gameState = GameState.SUCCESS;
+            this.winner = updatedMove.getPlayer();
+        } else if(checkDraw()){
+            this.gameState = GameState.DRAW;
+        }
+
     }
 
 }
