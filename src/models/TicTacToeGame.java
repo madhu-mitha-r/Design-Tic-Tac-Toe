@@ -12,7 +12,7 @@ public class TicTacToeGame {
     private Board board;
     private List<Player> players;
     private Player winner;
-    private Player currentPlayer;
+    private int currentPlayerIndex;
     private List<WiningStrategy> winingStrategies;
     private List<Move> moves;
     private GameState gameState;
@@ -21,7 +21,7 @@ public class TicTacToeGame {
         this.board = new Board(boardSize);
         this.players = players;
         this.winner = null;
-        this.currentPlayer = players.get(0);
+        this.currentPlayerIndex = 0;
         this.winingStrategies = winingStrategies;
         this.gameState = GameState.IN_PROGRESS;
         this.moves = new ArrayList<>();
@@ -73,11 +73,10 @@ public class TicTacToeGame {
         cellInBoard.setPlayer(move.getPlayer());
         cellInBoard.setCellType(CellType.FILLED);
 
-        int index  = players.indexOf(this.currentPlayer);
-        index++;
-        index %= players.size();
-        this.currentPlayer = players.get(index);
+        currentPlayerIndex++;
+        currentPlayerIndex %= players.size();
 
+        // can be used in undo
         move.setCell(cellInBoard);
         moves.add(move);
 
@@ -85,7 +84,7 @@ public class TicTacToeGame {
 
     public void makeMove(){
 
-        Player current = currentPlayer;
+        Player currentPlayer = players.get(currentPlayerIndex);
 
         Move move = currentPlayer.makeMove(this.board);
 
@@ -101,11 +100,34 @@ public class TicTacToeGame {
 
         if(checkWinner(move)){
             this.gameState = GameState.SUCCESS;
-            this.winner = current;
+            this.winner = currentPlayer;
         } else if(checkDraw()){
             this.gameState = GameState.DRAW;
         }
 
+    }
+
+    public void undoLastMove(){
+        if(moves.isEmpty()){
+            System.out.println("There is no move to undo.");
+            return;
+        }
+
+        Move lastMove = moves.getLast();
+
+        for(WiningStrategy winingStrategy: winingStrategies){
+            winingStrategy.handleUndo(lastMove);
+        }
+
+
+        lastMove.getCell().setCellType(CellType.EMPTY);
+        lastMove.getCell().setPlayer(null);
+        currentPlayerIndex--;
+        currentPlayerIndex = (currentPlayerIndex+players.size())%players.size();
+
+        moves.remove(moves.size()-1);
+        this.winner = null;
+        this.gameState = GameState.IN_PROGRESS;
     }
 
 }

@@ -25,15 +25,25 @@ public class TicTacToeController {
         this.game = new TicTacToeGame(boardSize, players, winingStrategies);
 
         while(game.getGameState() == GameState.IN_PROGRESS){
-            game.displayGame();
             game.makeMove();
+            game.displayGame();
+
+            System.out.println("Do you want to undo the last move? [Y/N]");
+            String input = sc.nextLine();
+            if(input.equalsIgnoreCase("Y")) {
+                game.undoLastMove();
+                System.out.println("Undo completed");
+                game.displayGame();
+            }
         }
-        game.displayGame();
+
         if(game.getGameState().equals(GameState.SUCCESS)){
             System.out.println("GAME OVER !!"+ game.getWinner().getName()+" is the Winner!!");
         }else if(game.getGameState().equals(GameState.DRAW)){
             System.out.println("GAME OVER !!, Its a DRAW");
         }
+
+        game.displayGame();
     }
 
     private int getBoardSize(){

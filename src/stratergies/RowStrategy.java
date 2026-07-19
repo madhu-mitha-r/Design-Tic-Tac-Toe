@@ -29,4 +29,12 @@ public class RowStrategy implements WiningStrategy {
 
         return rowMap.get(row).get(pattern) == board.getBoardSize();
     }
+
+    @Override
+    public void handleUndo(Move move) {
+        int row = move.getCell().getRow();
+        String pattern = move.getPlayer().getSymbol().getPattern();
+
+        rowMap.get(row).put(pattern,rowMap.get(row).get(pattern) -1);
+    }
 }
