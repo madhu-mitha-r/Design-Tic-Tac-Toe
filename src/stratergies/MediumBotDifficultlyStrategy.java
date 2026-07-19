@@ -1,4 +1,4 @@
 package stratergies;
 
-public class MediumBotDiffcutlyStrategy {
+public class MediumBotDifficultlyStrategy {
 }

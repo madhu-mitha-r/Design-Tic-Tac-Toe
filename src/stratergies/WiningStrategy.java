@@ -1,4 +1,5 @@
 package stratergies;
 
-public interface WiningStatergy {
+public interface WiningStrategy {
+    void checkWinner();
 }
