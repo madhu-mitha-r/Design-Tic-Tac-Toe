@@ -1,6 +1,8 @@
 package Controllers;
 
 import models.*;
+import stratergies.ColumnStrategy;
+import stratergies.RowStrategy;
 import stratergies.WiningStrategy;
 
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public class TicTacToeController {
         int boardSize = getBoardSize();
         List<Player> players = getPlayers(boardSize);
         List<WiningStrategy> winingStrategies = new ArrayList<>();
+        winingStrategies.add(new RowStrategy());
+        winingStrategies.add(new ColumnStrategy());
 
         this.game = new TicTacToeGame(boardSize, players, winingStrategies);
 
@@ -26,7 +30,7 @@ public class TicTacToeController {
         }
         game.displayGame();
         if(game.getGameState().equals(GameState.SUCCESS)){
-            System.out.println("GAME OVER !!"+ game.getWinner().getName()+"is the Winner!!");
+            System.out.println("GAME OVER !!"+ game.getWinner().getName()+" is the Winner!!");
         }else if(game.getGameState().equals(GameState.DRAW)){
             System.out.println("GAME OVER !!, Its a DRAW");
         }
@@ -41,8 +45,19 @@ public class TicTacToeController {
 
     private List<Player> getPlayers(int boardSize){
         List<Player> players = new ArrayList<>(boardSize);
+        System.out.println("Let's add Players to the Board");
+        System.out.println("Do you want Bot? [Y/N]");
 
-        for(int i = 0; i < boardSize-1; i++){
+        String input = sc.nextLine();
+        int playerCount = boardSize-1;
+
+        if(input.equalsIgnoreCase("Y")){
+
+          players.add(new Bot(0,"Bot",new Symbol("B"), BotDifficultyLevel.EASY));
+          playerCount--;
+        }
+
+        for(int i = 0; i < playerCount; i++){
             System.out.println("Please enter the name and the symbol of the player");
             String[] playerDetails = sc.nextLine().split(" ");
             players.add(new Human(1,playerDetails[0], new Symbol(playerDetails[1])));

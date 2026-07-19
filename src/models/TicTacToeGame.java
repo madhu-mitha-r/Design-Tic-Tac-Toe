@@ -52,10 +52,10 @@ public class TicTacToeGame {
         }
     }
 
-    private boolean checkWinner(){
+    private boolean checkWinner(Move move){
 
         for(WiningStrategy winingStrategy : this.winingStrategies){
-            if(winingStrategy.checkWinner(board)) return true;
+            if(winingStrategy.checkWinner(board, move)) return true;
         }
 
         return false;
@@ -65,7 +65,7 @@ public class TicTacToeGame {
         return moves.size() == board.getBoardSize() * board.getBoardSize();
     }
 
-    private Move updateGameWithMove(Move move){
+    private void updateGameWithMove(Move move){
         int row = move.getCell().getRow();
         int col = move.getCell().getCol();
 
@@ -81,10 +81,11 @@ public class TicTacToeGame {
         move.setCell(cellInBoard);
         moves.add(move);
 
-        return move;
     }
 
     public void makeMove(){
+
+        Player current = currentPlayer;
 
         Move move = currentPlayer.makeMove(this.board);
 
@@ -96,11 +97,11 @@ public class TicTacToeGame {
             return;
         }
 
-        Move updatedMove = updateGameWithMove(move);
+        updateGameWithMove(move);
 
-        if(checkWinner()){
+        if(checkWinner(move)){
             this.gameState = GameState.SUCCESS;
-            this.winner = updatedMove.getPlayer();
+            this.winner = current;
         } else if(checkDraw()){
             this.gameState = GameState.DRAW;
         }
